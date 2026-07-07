@@ -1,94 +1,81 @@
-# YouTube Title Hider
+# 🤫 YouTube Title Hider
 
-A small browser extension that hides the video title on YouTube watch pages and replaces the browser tab title with a generic string when enabled. Click the extension icon to toggle the feature on/off.
+**Keep your focus, hide the spoilers.**
 
-## Features
-
-- Hides the YouTube video title element on watch pages.
-- Replaces the browser tab title with "YouTube Video - Title Hidden" when enabled.
-- Toggle the behavior by clicking the extension icon; state is persisted using browser storage.
-
-## Files in this repository
-
-- `contentScript.js` — Runs on YouTube pages and hides/restores titles depending on the extension state.
-- `background.js` — Service worker that toggles the enabled state when the extension icon is clicked and updates the badge/title.
-- `manifest.json` — Manifest V3 describing permissions, content scripts and icons.
-- `icons/` — Folder with extension icon files (16/48/128 px).
-
-## Quick contract
-
-- Input: User clicks the extension icon (or the `enabled` flag is toggled programmatically).
-- Output: Titles are hidden when `enabled === true`; restored when `enabled === false`.
-- Error modes: If the extension APIs are unavailable, the content script defaults to disabled and does not hide titles.
-
-## How to install (download ZIP and load locally)
-
-Follow these steps to install the extension locally from a ZIP (recommended for testing locally):
-
-1. Download the repository as a ZIP (for example, `YT-detailshider.zip`) and extract it to a folder on your computer. Alternatively, if you already have the folder on your machine, skip the ZIP step.
-
-2. Open your browser's extensions page:
-   - Chrome / Edge: `chrome://extensions` or `edge://extensions`
-   - Firefox (developer install): `about:debugging#/runtime/this-firefox` (Firefox uses a different mechanism, see notes below)
-
-3. Enable Developer mode (usually a toggle in the top-right of the page).
-
-4. Click "Load unpacked" (Chrome/Edge) and select the extracted folder (the folder that contains `manifest.json`).
-
-   - If you downloaded a ZIP, extract it first and then select the extracted folder. Do not select the ZIP file directly; browsers expect the unpacked directory.
-
-5. The extension should appear in the list. You can optionally pin the extension to the toolbar.
-
-6. Load a YouTube watch page (URL like `https://www.youtube.com/watch?v=...`) and click the extension icon to toggle title hiding. When enabled you should see the extension badge read `ON` and the video title and tab title should be hidden/changed.
-
-Notes for Firefox users:
-- Firefox uses `browser` APIs and different packaging; the provided code uses `chrome.*` calls. To run in Firefox you can either install a small compatibility polyfill or edit the code to use `browser` APIs. Loading a temporary add-on is done from `about:debugging` -> "This Firefox" -> "Load Temporary Add-on" and selecting the `manifest.json` file.
-
-## How to pack the extension for distribution (optional)
-
-If you want to produce a ZIP for sharing (not for the Chrome Web Store), simply zip the folder contents and distribute the ZIP. Recipients should extract and load via "Load unpacked" as described above.
-
-Example command to create a ZIP (run inside the project directory):
-
-```bash
-zip -r ../YT-detailshider.zip .
-```
-
-If you want to publish to the Chrome Web Store, follow Google's publishing steps (you will need to create a developer account, pay registration fee, and upload a ZIP package formatted per the store requirements).
-
-## Troubleshooting
-
-- Icon not showing everywhere: The manifest includes a top-level `icons` field and action icons. If you still see a placeholder image:
-  - Make sure `icons/icon16.png`, `icons/icon48.png`, and `icons/icon128.png` exist in the `icons/` folder.
-  - If they are present but look blurry, replace them with properly sized PNGs (16×16, 48×48, 128×128).
-
-- Titles aren’t hiding:
-  - Double-check the extension is enabled and that the badge reads `ON` (click the icon to toggle).
-  - The content script matches YouTube pages; open a watch page (`/watch?` path) and confirm the page URL starts with `/watch`.
-  - YouTube's DOM sometimes changes. If the selector fails, open DevTools (right-click the title and Inspect) to find a current selector and update `contentScript.js` accordingly.
-
-- Document title not restored correctly:
-  - The content script stores the initial `document.title` on load and restores that value when disabling. If the title changes dynamically after load, the restored value might be the original one. Reload the page after toggling or consider improving the logic to track dynamic titles.
-
-## Customization ideas
-
-- Add a popup UI (`popup.html`) so users can toggle the feature and change settings (custom replacement title, enable on specific domains, custom selectors).
-- Add an options page to let users specify the exact selector for the YouTube title or the replacement tab title.
-
-## Development notes
-
-- Manifest V3 is used with a background service worker `background.js`. The extension uses `chrome.storage.local` to persist the `enabled` flag.
-- Content script uses a MutationObserver to handle YouTube's SPA navigation.
-
-## License
-
-Place your license here (MIT, Apache-2.0, etc.) or remove this section if not applicable.
+YouTube Title Hider is a lightweight browser extension designed to enhance your viewing experience by hiding video titles on YouTube. Whether you're trying to avoid spoilers or just want a cleaner, more focused interface, this extension has you covered.
 
 ---
 
-If you want, I can also:
+## ✨ Features
 
-- Generate nicer placeholder icons (16/48/128) automatically, or
-- Add a small popup UI with a toggle and label (gives clearer UX than clicking the icon alone).
+- 🕵️ **Hide Video Titles**: Instantly removes the video title element on any YouTube watch page.
+- 🏷️ **Tab Masking**: Replaces the browser tab title with "YouTube Video - Title Hidden" so no one can see what you're watching from your tab bar.
+- 🔄 **Easy Toggle**: Turn the feature ON or OFF with a single click on the extension icon.
+- 💾 **Persistent Settings**: Remembers your preference (ON/OFF) even after you restart your browser.
+- ⚡ **Lightweight & Fast**: Minimal impact on browser performance.
 
-Tell me which of the above you'd like next.
+---
+
+## 🛠️ How it Works
+
+1. **Background Service Worker**: Handles the extension icon click and manages the global "enabled" state. It also updates the extension badge (showing **ON** when active).
+2. **Content Script**: Injects into YouTube pages. It listens for changes in the extension state and uses a `MutationObserver` to ensure titles stay hidden even when you navigate between videos on YouTube's single-page app.
+
+---
+
+## 🚀 Installation Guide
+
+Want to try it out? Follow these simple steps:
+
+### For Chrome, Edge, and Brave:
+
+1. **Download the Extension**: [Download the ZIP](./YouTubeTitleHider.zip) (or clone this repository).
+2. **Extract the Files**: If you downloaded a ZIP, unzip it to a folder on your computer.
+3. **Open Extensions Page**:
+   - In Chrome: Go to `chrome://extensions/`
+   - In Edge: Go to `edge://extensions/`
+4. **Enable Developer Mode**: Toggle the **Developer mode** switch in the top-right corner.
+5. **Load the Extension**:
+   - Click the **Load unpacked** button.
+   - Select the folder containing the extension files (the one with `manifest.json`).
+6. **Done!** The 🤫 icon should now appear in your extension list.
+
+---
+
+## 🎮 How to Use
+
+1. **Pin the Extension**: For easy access, pin the YouTube Title Hider icon to your browser toolbar.
+2. **Navigate to YouTube**: Open any video on [YouTube](https://www.youtube.com).
+3. **Toggle On/Off**: Click the extension icon.
+   - When the badge says **ON**, the title will be hidden.
+   - Click again to reveal the title.
+4. **Watch Privacy**: Notice how your browser tab also changes to "YouTube Video - Title Hidden" when enabled!
+
+---
+
+## 📦 Extension Pack
+
+To share this extension with others or upload it to your own extension pack:
+1. Zip the entire directory.
+2. Rename it to `YouTubeTitleHider.zip`.
+3. Distribute or upload!
+
+---
+
+## 🔧 Development
+
+If you'd like to contribute or modify the extension:
+
+- `manifest.json`: Configuration and permissions.
+- `contentScript.js`: Logic for hiding elements on the page.
+- `background.js`: Handles extension-level events like icon clicks.
+- `icons/`: Contains the visual identity of the extension.
+
+---
+
+### 📝 License
+This project is open-source and available under the [MIT License](LICENSE).
+
+---
+
+*Happy focused watching!* 🍿
